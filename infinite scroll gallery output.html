@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinite Scroll Gallery</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+  }
+
+  h1 {
+    text-align: center;
+    background: #333;
+    color: white;
+    padding: 15px 0;
+    margin: 0;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .gallery img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery img:hover {
+    transform: scale(1.05);
+  }
+
+  .loader {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<h1>Infinite Scroll Gallery</h1>
+<div class="gallery" id="gallery"></div>
+<div class="loader" id="loader">Loading more images...</div>
+
+<script>
+  // Create an array of image URLs
+  const imageUrls = [
+    "https://picsum.photos/400/300?random=1",
+    "https://picsum.photos/400/300?random=2",
+    "https://picsum.photos/400/300?random=3",
+    "https://picsum.photos/400/300?random=4",
+    "https://picsum.photos/400/300?random=5",
+    "https://picsum.photos/400/300?random=6",
+    "https://picsum.photos/400/300?random=7",
+    "https://picsum.photos/400/300?random=8",
+    "https://picsum.photos/400/300?random=9",
+    "https://picsum.photos/400/300?random=10"
+  ];
+
+  const gallery = document.getElementById('gallery');
+  const loader = document.getElementById('loader');
+  let imageCount = 0;
+
+  // Function to load 6 new images at a time
+  function loadImages() {
+    for (let i = 0; i < 6; i++) {
+      const img = document.createElement('img');
+      img.src = imageUrls[(imageCount + i) % imageUrls.length] + "&time=" + new Date().getTime();
+      gallery.appendChild(img);
+    }
+    imageCount += 6;
+  }
+
+  // Initial load
+  loadImages();
+
+  // Detect scroll near bottom
+  window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
+      loader.style.display = "block";
+      setTimeout(() => {
+        loadImages();
+        loader.style.display = "none";
+      }, 1000);
+    }
+  });
+</script>
+
+</body>
+</html>
